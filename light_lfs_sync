@@ -1,0 +1,90 @@
+#!/usr/local/bin/python
+
+# A utility to support large file tracking in Git.
+#
+# Kayvon Tabrizi, 2018
+
+# imports
+import datetime, os, shutil, subprocess, sys
+
+# alias subprocess.check_output
+bash = lambda call: subprocess.check_output(call, shell=True).strip()
+
+# prepare log file
+now = datetime.datetime.now()
+date = now.strftime("%m-%d-%Y")
+getTime = lambda: datetime.datetime.now().strftime("%H:%M:%S.%f")
+log = []
+
+# redirect output to debug file
+debug_path = os.path.join(os.path.split(sys.argv[0])[0], "debugs", "debug_"+date)
+sys.stdout = open(sys.argv[0], "a+")
+sys.stderr = open(sys.argv[0], "a+")
+
+# extract working directory as argument
+working_dir = sys.argv[1]
+
+# ensure path exists and set as working dir
+if not os.path.isdir(working_dir): exit()
+os.chdir(working_dir)
+
+# extract git root from current directory and ensure it exists
+git_root = bash("git rev-parse --show-toplevel")
+if not os.path.isdir(git_root): exit()
+
+# extract local path and ensure it exists
+local_path = bash("git config filter.light_lfs.localpath")
+if not os.path.isdir(local_path): exit()
+
+# ensure .gitattributes exists
+attributes_path = os.path.join(git_root, ".gitattributes")
+if not os.path.isfile(attributes_path): exit()
+
+# open .gitattributes and parse extensions to consider
+with open(attributes_path) as file:
+	attributes = file.read().strip().split("\n")
+extensions = [attr.split()[0][2:] for attr in attributes if "light_lfs" in attr]
+
+# populate tracked-path list
+tracked_paths = bash("git ls-tree master --name-only")
+tracked_paths = tracked_paths.split("\n")
+tracked_dirs = [path for path in tracked_paths if os.path.isdir(path)]
+tracked_files = [path for path in tracked_paths if os.path.isfile(path)]
+
+# loop through tracked dirs
+for directory in tracked_dirs:
+	# recursively call light_lfs_sync
+	bash(sys.argv[0]+" \""+os.path.join(working_dir, directory)+"\"")
+
+# restrict tracked file extensions and exit if none remain
+tracked_files = [file for file in tracked_files if file.split(".")[-1] in extensions]
+if len(tracked_files) == 0: exit()
+
+# isolate git-relative path of working directory
+dir_path = os.path.relpath(working_dir, git_root)
+
+# determine local dir path and create directories if they don't yet exist
+local_dir_path = os.path.join(local_path, dir_path)
+if not os.path.isdir(local_dir_path): os.makedirs(local_dir_path)
+
+# gather a list of files missing from local directory
+existing_paths = os.listdir(local_dir_path)
+missing_files = [file for file in tracked_files if not file in existing_paths]
+
+# loop through files
+for file in missing_files:
+	# set paths
+	remote_file_path = os.path.join(working_dir, file)
+	local_file_path = os.path.join(local_dir_path, file)
+
+	# download file
+	shutil.copy(remote_file_path, local_file_path)
+
+	# log the copy
+	log.append(getTime()+":\tDownloaded '"+file+"'.")
+
+# if populated, write a log file
+if len(log) > 0:
+	log_path = os.path.join(os.path.split(sys.argv[0])[0], "logs", "log_"+date)
+	with open(log_path, "a+") as file:
+		file.write("\n".join(map(str, log))+"\n")
