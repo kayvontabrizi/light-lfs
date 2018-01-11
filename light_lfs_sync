@@ -81,7 +81,7 @@ for file in missing_files:
 	shutil.copy(remote_file_path, local_file_path)
 
 	# log the copy
-	log.append(getTime()+":\tDownloaded '"+file+"'.")
+	log.append(getTime()+":\tDownloaded '"+os.path.join(dir_path, file)+"'.")
 
 # if populated, write a log file
 if len(log) > 0:

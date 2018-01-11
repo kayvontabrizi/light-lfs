@@ -22,7 +22,6 @@ log = [time+":"]
 
 # redirect output to debug file
 debug_path = os.path.join(os.path.split(sys.argv[0])[0], "debugs", "debug_"+date)
-sys.stdout = open(sys.argv[0], "a+")
 sys.stderr = open(sys.argv[0], "a+")
 
 # read input file and file_path
