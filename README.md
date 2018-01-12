@@ -58,6 +58,6 @@ _**Note:** The local repository can be any directory. Importantly, any files not
 
 See [Configuration](#configuration) for set-up details.
 
-## Attribution
+## Copyright
 
-Written by Kayvon Tabrizi. Feel free to use, modify, and attribute as desired.
+Copyright (c) 2018 Kayvon Tabrizi, see LICENSE for details.
