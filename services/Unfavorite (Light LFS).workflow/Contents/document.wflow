@@ -119,7 +119,7 @@ done</string>
 				<key>Class Name</key>
 				<string>RunShellScriptAction</string>
 				<key>InputUUID</key>
-				<string>A4280FE5-83B1-4BC7-BF7B-DB5B9EEE8C79</string>
+				<string>A4B4348C-4EFD-47A8-A49B-E6F2811ECBC0</string>
 				<key>Keywords</key>
 				<array>
 					<string>Shell</string>
@@ -129,9 +129,9 @@ done</string>
 					<string>Unix</string>
 				</array>
 				<key>OutputUUID</key>
-				<string>2837BA4B-4C37-433E-B6DD-703908AAD268</string>
+				<string>D5922F0C-CF46-4808-8A4F-C3789B2699B1</string>
 				<key>UUID</key>
-				<string>7426837C-72F8-4811-88DB-E3C63789B248</string>
+				<string>DEBDF678-0BA5-484F-A57D-83357DD6070A</string>
 				<key>UnlocalizedApplications</key>
 				<array>
 					<string>Automator</string>
@@ -204,10 +204,12 @@ done</string>
 						<string>4</string>
 					</dict>
 				</dict>
+				<key>conversionLabel</key>
+				<integer>0</integer>
 				<key>isViewVisible</key>
 				<true/>
 				<key>location</key>
-				<string>309.000000:253.000000</string>
+				<string>309.000000:407.000000</string>
 				<key>nibPath</key>
 				<string>/System/Library/Automator/Run Shell Script.action/Contents/Resources/English.lproj/main.nib</string>
 			</dict>

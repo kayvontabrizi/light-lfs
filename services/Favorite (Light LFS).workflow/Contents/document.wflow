@@ -119,7 +119,7 @@ done</string>
 				<key>Class Name</key>
 				<string>RunShellScriptAction</string>
 				<key>InputUUID</key>
-				<string>A4280FE5-83B1-4BC7-BF7B-DB5B9EEE8C79</string>
+				<string>59D4FFE1-A323-4C0C-8986-E4A357BE0A2E</string>
 				<key>Keywords</key>
 				<array>
 					<string>Shell</string>
@@ -129,9 +129,9 @@ done</string>
 					<string>Unix</string>
 				</array>
 				<key>OutputUUID</key>
-				<string>2837BA4B-4C37-433E-B6DD-703908AAD268</string>
+				<string>8BD82D3C-0225-4A9B-A4D2-82F6F6F0AF9A</string>
 				<key>UUID</key>
-				<string>7426837C-72F8-4811-88DB-E3C63789B248</string>
+				<string>949F8145-DFCB-4417-B4F7-34BB88EEE047</string>
 				<key>UnlocalizedApplications</key>
 				<array>
 					<string>Automator</string>
