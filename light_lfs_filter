@@ -9,52 +9,18 @@
 # Kayvon Tabrizi, 2018
 
 # imports
-import datetime, hashlib, os, shutil, subprocess, sys
-
-# alias subprocess.check_output
-bash = subprocess.check_output
+import datetime, hashlib, os, sys
 
 # prepare log file
 now = datetime.datetime.now()
 date = now.strftime("%m-%d-%Y")
-time = now.strftime("%H:%M:%S.%f")
-log = [time+":"]
 
 # redirect output to debug file
 debug_path = os.path.join(os.path.split(sys.argv[0])[0], "debugs", "debug_"+date)
-sys.stderr = open(sys.argv[0], "a+")
+sys.stderr = open(debug_path, "a+")
 
 # read input file and file_path
 file_contents = sys.stdin.read()
-file_path = sys.argv[1]
-
-# read repository path
-remote_path = os.getcwd()
-remote_file_path = os.path.join(remote_path, file_path)
-
-# read local path
-local_path = bash("git config filter.light_lfs.localpath", shell=True).strip()
-local_file_path = os.path.join(local_path, file_path)
-
-# check if file exists
-if not os.path.isfile(local_file_path):
-	# create necessary folders
-	local_file_dir = os.path.split(local_file_path)[0]
-	if not os.path.isdir(local_file_dir): os.makedirs(local_file_dir)
-
-	# download file
-	shutil.copy(remote_file_path, local_file_path)
-
-	# log the copy
-	log.append("Downloaded '"+file_path+"'.")
-
-# report if file already existed
-else: log.append("'"+file_path+"' already existed.")
-
-# write log file
-log_path = os.path.join(os.path.split(sys.argv[0])[0], "logs", "log_"+date)
-with open(log_path, "a+") as file:
-	file.write("\t".join(map(str, log))+"\n")
 
 # output hashed info
 print hashlib.sha1(file_contents).hexdigest()

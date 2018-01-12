@@ -31,6 +31,6 @@ export PATH="/usr/local/bin/:$PATH"
 # loop through input files and folders
 for f in "$@"; do
 	# remove tracked changes and tags
-	git reset HEAD "$f"
+	git rm --cached -r "$f"
 	tag -r Blue -R "$f"
 done

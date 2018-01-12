@@ -18,8 +18,8 @@ log = []
 
 # redirect output to debug file
 debug_path = os.path.join(os.path.split(sys.argv[0])[0], "debugs", "debug_"+date)
-sys.stdout = open(sys.argv[0], "a+")
-sys.stderr = open(sys.argv[0], "a+")
+sys.stdout = open(debug_path, "a+")
+sys.stderr = open(debug_path, "a+")
 
 # extract working directory as argument
 working_dir = sys.argv[1]
@@ -45,6 +45,12 @@ with open(attributes_path) as file:
 	attributes = file.read().strip().split("\n")
 extensions = [attr.split()[0][2:] for attr in attributes if "light_lfs" in attr]
 
+# attempt git commit
+try:
+	bash("git commit -m \""+date+", "+getTime()+" Sync Commit\"")
+except:
+	pass
+
 # populate tracked-path list
 tracked_paths = bash("git ls-tree master --name-only")
 tracked_paths = tracked_paths.split("\n")
@@ -58,7 +64,6 @@ for directory in tracked_dirs:
 
 # restrict tracked file extensions and exit if none remain
 tracked_files = [file for file in tracked_files if file.split(".")[-1] in extensions]
-if len(tracked_files) == 0: exit()
 
 # isolate git-relative path of working directory
 dir_path = os.path.relpath(working_dir, git_root)
@@ -70,8 +75,9 @@ if not os.path.isdir(local_dir_path): os.makedirs(local_dir_path)
 # gather a list of files missing from local directory
 existing_paths = os.listdir(local_dir_path)
 missing_files = [file for file in tracked_files if not file in existing_paths]
+extra_paths = [path for path in existing_paths if not path in tracked_paths]
 
-# loop through files
+# loop through missing files
 for file in missing_files:
 	# set paths
 	remote_file_path = os.path.join(working_dir, file)
@@ -82,6 +88,18 @@ for file in missing_files:
 
 	# log the copy
 	log.append(getTime()+":\tDownloaded '"+os.path.join(dir_path, file)+"'.")
+
+# loop through extra paths
+for path in extra_paths:
+	# set path
+	local_extra_path = os.path.join(local_dir_path, path)
+
+	# delete file or directory
+	if os.path.isdir(local_extra_path): shutil.rmtree(local_extra_path)
+	elif os.path.isfile(local_extra_path): os.remove(local_extra_path)
+
+	# log the delete
+	log.append(getTime()+":\tDeleted '"+os.path.join(dir_path, path)+"'.")
 
 # if populated, write a log file
 if len(log) > 0:

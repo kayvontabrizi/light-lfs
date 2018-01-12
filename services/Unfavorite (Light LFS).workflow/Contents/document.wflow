@@ -92,7 +92,7 @@ export PATH="/usr/local/bin/:$PATH"
 # loop through input files and folders
 for f in "$@"; do
 	# remove tracked changes and tags
-	git reset HEAD "$f"
+	git rm --cached -r "$f"
 	tag -r Blue -R "$f"
 done</string>
 					<key>CheckedForUserDefaultShell</key>
@@ -207,7 +207,7 @@ done</string>
 				<key>isViewVisible</key>
 				<true/>
 				<key>location</key>
-				<string>309.000000:413.000000</string>
+				<string>309.000000:253.000000</string>
 				<key>nibPath</key>
 				<string>/System/Library/Automator/Run Shell Script.action/Contents/Resources/English.lproj/main.nib</string>
 			</dict>
