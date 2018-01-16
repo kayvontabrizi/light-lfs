@@ -84,7 +84,7 @@ for file in missing_files:
 	local_file_path = os.path.join(local_dir_path, file)
 
 	# download file
-	shutil.copy(remote_file_path, local_file_path)
+	shutil.copy2(remote_file_path, local_file_path)
 
 	# log the copy
 	log.append(getTime()+":\tDownloaded '"+os.path.join(dir_path, file)+"'.")
