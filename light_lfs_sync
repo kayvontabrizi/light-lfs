@@ -1,4 +1,4 @@
-#!/usr/local/bin/python
+#!/usr/bin/env python
 
 # A utility to support large file tracking in Git.
 #
@@ -42,14 +42,14 @@ if not os.path.isfile(attributes_path): exit()
 
 # open .gitattributes and parse extensions to consider
 with open(attributes_path) as file:
-	attributes = file.read().strip().split("\n")
+    attributes = file.read().strip().split("\n")
 extensions = [attr.split()[0][2:] for attr in attributes if "light_lfs" in attr]
 
 # attempt git commit
 try:
-	bash("git commit -m \""+date+", "+getTime()+" Sync Commit\"")
+    bash("git commit -m \""+date+", "+getTime()+" Sync Commit\"")
 except:
-	pass
+    pass
 
 # populate tracked-path list
 tracked_paths = bash("git ls-tree master --name-only")
@@ -59,8 +59,8 @@ tracked_files = [path for path in tracked_paths if os.path.isfile(path)]
 
 # loop through tracked dirs
 for directory in tracked_dirs:
-	# recursively call light_lfs_sync
-	bash(sys.argv[0]+" \""+os.path.join(working_dir, directory)+"\"")
+    # recursively call light_lfs_sync
+    bash(sys.argv[0]+" \""+os.path.join(working_dir, directory)+"\"")
 
 # restrict tracked file extensions and exit if none remain
 tracked_files = [file for file in tracked_files if file.split(".")[-1] in extensions]
@@ -79,30 +79,30 @@ extra_paths = [path for path in existing_paths if not path in tracked_paths]
 
 # loop through missing files
 for file in missing_files:
-	# set paths
-	remote_file_path = os.path.join(working_dir, file)
-	local_file_path = os.path.join(local_dir_path, file)
+    # set paths
+    remote_file_path = os.path.join(working_dir, file)
+    local_file_path = os.path.join(local_dir_path, file)
 
-	# download file
-	shutil.copy2(remote_file_path, local_file_path)
+    # download file
+    shutil.copy2(remote_file_path, local_file_path)
 
-	# log the copy
-	log.append(getTime()+":\tDownloaded '"+os.path.join(dir_path, file)+"'.")
+    # log the copy
+    log.append(getTime()+":\tDownloaded '"+os.path.join(dir_path, file)+"'.")
 
 # loop through extra paths
 for path in extra_paths:
-	# set path
-	local_extra_path = os.path.join(local_dir_path, path)
+    # set path
+    local_extra_path = os.path.join(local_dir_path, path)
 
-	# delete file or directory
-	if os.path.isdir(local_extra_path): shutil.rmtree(local_extra_path)
-	elif os.path.isfile(local_extra_path): os.remove(local_extra_path)
+    # delete file or directory
+    if os.path.isdir(local_extra_path): shutil.rmtree(local_extra_path)
+    elif os.path.isfile(local_extra_path): os.remove(local_extra_path)
 
-	# log the delete
-	log.append(getTime()+":\tDeleted '"+os.path.join(dir_path, path)+"'.")
+    # log the delete
+    log.append(getTime()+":\tDeleted '"+os.path.join(dir_path, path)+"'.")
 
 # if populated, write a log file
 if len(log) > 0:
-	log_path = os.path.join(os.path.split(sys.argv[0])[0], "logs", "log_"+date)
-	with open(log_path, "a+") as file:
-		file.write("\n".join(map(str, log))+"\n")
+    log_path = os.path.join(os.path.split(sys.argv[0])[0], "logs", "log_"+date)
+    with open(log_path, "a+") as file:
+        file.write("\n".join(map(str, log))+"\n")

@@ -1,10 +1,10 @@
-#!/usr/local/bin/python
+#!/usr/bin/env python
 
 # A filter to support large file tracking in Git.
 #
 # Filter implementation based on:
-#	https://stackoverflow.com/questions/18734739/
-#	using-ipython-notebooks-under-version-control/20844506#20844506
+#   https://stackoverflow.com/questions/18734739/
+#   using-ipython-notebooks-under-version-control/20844506#20844506
 #
 # Kayvon Tabrizi, 2018
 
@@ -20,7 +20,7 @@ debug_path = os.path.join(os.path.split(sys.argv[0])[0], "debugs", "debug_"+date
 sys.stderr = open(debug_path, "a+")
 
 # read input file and file_path
-file_contents = sys.stdin.read()
+file_contents = sys.stdin.buffer.read()
 
 # output hashed info
-print hashlib.sha1(file_contents).hexdigest()
+print(hashlib.sha1(file_contents).hexdigest())
